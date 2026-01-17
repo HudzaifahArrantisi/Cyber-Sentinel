@@ -1,4 +1,4 @@
-# 🛡️ CyberNet Sentinel - Advanced Network Security Analyzer
+# 🛡️ CyberNet Sentinel - Advanced Network Security Analyzer By Candalena
 
 <div align="center">
 
@@ -695,7 +695,7 @@ Butuh bantuan? Silakan:
 
 ### ⭐ Star this repository if you find it useful!
 
-**Made with ❤️ for the Cybersecurity Community**
+**Candalena**
 
 [Report Bug](https://github.com/cybersecurity-student/cybernet-sentinel/issues) • [Request Feature](https://github.com/cybersecurity-student/cybernet-sentinel/issues) • [Documentation](docs/)
 
