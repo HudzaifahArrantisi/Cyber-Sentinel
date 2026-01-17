@@ -70,6 +70,7 @@ class NetworkSecurityAnalyzer:
               ▄█ ██▄ █░▀█ ░█░ █ █░▀█ ██▄ █▄▄
 {Fore.CYAN}          Advanced Network Security Analyzer v2.1 Pro
 {Fore.CYAN}{'═'*75}
+{Fore.MAGENTA}        🔥 Cybernet Sentinel By Candalena 🔥
 {Fore.WHITE}  Author: Cybersecurity Student | Semester 3
 {Fore.CYAN}  Features: {Fore.GREEN}Fast Scan {Fore.CYAN}| {Fore.GREEN}Deep Analysis {Fore.CYAN}| {Fore.GREEN}Attack Detection
 {Fore.CYAN}{'═'*75}
