@@ -1,0 +1,20 @@
+network:
+  default_interface: "eth0"
+  scan_timeout: 1
+  max_threads: 100
+  packet_count: 100
+  
+security:
+  syn_flood_threshold: 50
+  ddos_threshold: 100
+  port_scan_threshold: 10
+  
+output:
+  default_format: "json"
+  save_packets: true
+  verbose: false
+  
+scanning:
+  default_ports: "1-1024"
+  top_ports: "21,22,23,80,443,445,3389"
+  udp_ports: "53,67,68,123,161"

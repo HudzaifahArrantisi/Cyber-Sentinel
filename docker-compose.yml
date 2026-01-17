@@ -1,0 +1,194 @@
+# ============================================
+# CyberNet Sentinel - Docker Compose Configuration
+# Network Security Analyzer Stack
+# ============================================
+
+version: '3.8'
+
+services:
+  # Main CyberNet Sentinel application
+  sentinel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cybernet-sentinel:latest
+    container_name: cybernet-sentinel
+    hostname: sentinel
+    
+    # Network configuration
+    # Use host network for direct access to host network interfaces
+    network_mode: host
+    
+    # Privileged mode required for packet capture and raw sockets
+    privileged: true
+    
+    # Enable interactive terminal
+    stdin_open: true
+    tty: true
+    
+    # Environment variables
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TARGET_NETWORK=${TARGET_NETWORK:-192.168.1.0/24}
+      - SCAN_PORTS=${SCAN_PORTS:-1-1024}
+      - SCAN_THREADS=${SCAN_THREADS:-100}
+      - PACKET_COUNT=${PACKET_COUNT:-100}
+      - ENABLE_LOGS=${ENABLE_LOGS:-true}
+    
+    # Volume mounts
+    volumes:
+      # Reports directory
+      - ./reports:/app/reports
+      # Logs directory
+      - ./logs:/app/logs
+      # Config file
+      - ./config.yaml:/app/config.yaml:ro
+      # Captured packets
+      - ./captured_packets.txt:/app/captured_packets.txt
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Optional: Database for storing scan results (PostgreSQL)
+  database:
+    image: postgres:15-alpine
+    container_name: sentinel-db
+    hostname: sentinel-db
+    
+    environment:
+      POSTGRES_DB: sentinel
+      POSTGRES_USER: sentinel
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme123}
+    
+    volumes:
+      - sentinel-db-data:/var/lib/postgresql/data
+    
+    ports:
+      - "5432:5432"
+    
+    restart: unless-stopped
+    
+    # Only start if explicitly enabled
+    profiles:
+      - with-db
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sentinel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Optional: Web dashboard (if implemented in future)
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: cybernet-sentinel:latest
+    container_name: sentinel-dashboard
+    
+    command: python -m flask run --host=0.0.0.0 --port=5000
+    
+    ports:
+      - "5000:5000"
+    
+    environment:
+      - FLASK_APP=web_interface.py
+      - FLASK_ENV=production
+    
+    volumes:
+      - ./reports:/app/reports:ro
+    
+    depends_on:
+      - sentinel
+    
+    restart: unless-stopped
+    
+    # Only start if explicitly enabled
+    profiles:
+      - with-web
+
+# Named volumes
+volumes:
+  sentinel-db-data:
+    driver: local
+
+# Networks (if not using host mode)
+networks:
+  sentinel-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+
+# ============================================
+# Usage Instructions:
+# ============================================
+#
+# 1. Start main application only:
+#    docker-compose up -d
+#
+# 2. Start with database:
+#    docker-compose --profile with-db up -d
+#
+# 3. Start with web dashboard:
+#    docker-compose --profile with-web up -d
+#
+# 4. Start everything:
+#    docker-compose --profile with-db --profile with-web up -d
+#
+# 5. View logs:
+#    docker-compose logs -f sentinel
+#
+# 6. Access container shell:
+#    docker-compose exec sentinel bash
+#
+# 7. Stop services:
+#    docker-compose down
+#
+# 8. Stop and remove volumes:
+#    docker-compose down -v
+#
+# 9. Rebuild images:
+#    docker-compose build --no-cache
+#
+# 10. Scale services (if needed):
+#     docker-compose up -d --scale sentinel=3
+#
+# ============================================
+# Environment Variables (.env file):
+# ============================================
+# Create a .env file in the same directory:
+#
+# TARGET_NETWORK=192.168.1.0/24
+# SCAN_PORTS=1-10000
+# SCAN_THREADS=200
+# PACKET_COUNT=500
+# DB_PASSWORD=your_secure_password
+# ENABLE_LOGS=true
+#
+# ============================================
