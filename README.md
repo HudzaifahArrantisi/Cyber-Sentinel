@@ -25,70 +25,70 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey?style=flat-square)](https://github.com)
 [![Docker](https://img.shields.io/badge/docker-ready-2496ED?style=flat-square&logo=docker&logoColor=white)](Dockerfile)
 
-[Fitur](#-fitur-utama) • [Instalasi](#-instalasi) • [Penggunaan](#-penggunaan) • [Docker](#-docker-deployment) • [Dokumentasi](#-dokumentasi) • [Lisensi](#-lisensi)
+[Features](#-key-features) • [Installation](#-installation) • [Usage](#-usage) • [Docker](#-docker-deployment) • [Documentation](#-documentation) • [License](#-license)
 
 </div>
 
 ---
 
-## 📖 Tentang Proyek
+## 📖 About the Project
 
-**CyberNet Sentinel** adalah alat analisis keamanan jaringan yang dikembangkan untuk Final Project Mata Kuliah Web Security. Tool ini dirancang untuk membantu security analyst, network administrator, dan cybersecurity enthusiast dalam melakukan:
+**CyberNet Sentinel** is a network security analysis tool developed as a Final Project for Web Security Course. This tool is designed to assist security analysts, network administrators, and cybersecurity enthusiasts in performing:
 
-- 🔍 Network reconnaissance dan discovery
-- 🚪 Port scanning dan service enumeration  
-- 👂 Network traffic monitoring dan analysis
-- ⚠️ Attack detection dan threat intelligence
+- 🔍 Network reconnaissance and discovery
+- 🚪 Port scanning and service enumeration  
+- 👂 Network traffic monitoring and analysis
+- ⚠️ Attack detection and threat intelligence
 - 📊 Security vulnerability assessment
-- 📝 Automated reporting dan documentation
+- 📝 Automated reporting and documentation
 
 ---
 
-## ✨ Fitur Utama
+## ✨ Key Features
 
 ### 🔍 1. Network Discovery
-Deteksi dan pemetaan perangkat di jaringan dengan berbagai metode:
+Device detection and network mapping with various methods:
 
-- **ARP Scanning** - Deteksi perangkat aktif menggunakan ARP protocol
-- **Ping Sweep** - ICMP-based host discovery dengan multithreading
+- **ARP Scanning** - Active device detection using ARP protocol
+- **Ping Sweep** - ICMP-based host discovery with multithreading
 - **Hostname Resolution** - Automatic DNS reverse lookup
-- **MAC Vendor Detection** - Identifikasi vendor perangkat dari MAC address
-- **Network Mapping** - Visualisasi topologi jaringan
+- **MAC Vendor Detection** - Device vendor identification from MAC address
+- **Network Mapping** - Network topology visualization
 
-**Contoh Output:**
+**Example Output:**
 ```
 [+] Host: 192.168.1.1    | MAC: 00:11:22:33:44:55 | Hostname: Router.local | Vendor: Cisco
 [+] Host: 192.168.1.10   | MAC: AA:BB:CC:DD:EE:FF | Hostname: PC-Admin    | Vendor: Intel
 ```
 
 ### 🚪 2. Port Scanner
-Advanced port scanning dengan multiple protocol support:
+Advanced port scanning with multiple protocol support:
 
 - **TCP Full Connect Scan** - Reliable connection-based scanning
-- **UDP Port Scanning** - Deteksi layanan UDP terbuka
-- **Banner Grabbing** - Mengambil service banner untuk identifikasi
+- **UDP Port Scanning** - Open UDP service detection
+- **Banner Grabbing** - Service banner extraction for identification
 - **Service Detection** - Automatic service identification
-- **Multithreading Support** - Fast scanning dengan 100+ concurrent threads
+- **Multithreading Support** - Fast scanning with 200+ concurrent threads
 - **Custom Port Range** - Flexible port specification
 
-**Kemampuan:**
+**Capabilities:**
 - Scan 1-65535 ports
-- Adjustable timeout dan threads
+- Adjustable timeout and threads
 - Service version detection
 - Common vulnerabilities identification
 
 ### 👂 3. Network Sniffer
-Real-time packet capture dan analysis:
+Real-time packet capture and analysis:
 
-- **Packet Capture** - Menangkap traffic jaringan secara real-time
+- **Packet Capture** - Capture network traffic in real-time
 - **Protocol Analysis** - Deep packet inspection (TCP/UDP/ICMP/ARP)
-- **Traffic Statistics** - Analisis statistik lalu lintas
+- **Traffic Statistics** - Traffic statistical analysis
 - **Packet Filtering** - BPF filter support
-- **Export Capability** - Simpan captured packets ke file
+- **Export Capability** - Save captured packets to file
 - **Live Monitoring** - Real-time traffic visualization
 
 **Protocol Support:**
-- TCP (dengan flag analysis)
+- TCP (with flag analysis)
 - UDP 
 - ICMP
 - ARP
@@ -97,9 +97,9 @@ Real-time packet capture dan analysis:
 ### ⚠️ 4. Attack Detection
 Intelligent threat detection system:
 
-- **SYN Flood Detection** - Deteksi serangan SYN flood
-- **Port Scan Detection** - Identifikasi aktivitas port scanning
-- **DDoS Detection** - Deteksi distributed denial of service
+- **SYN Flood Detection** - SYN flood attack detection
+- **Port Scan Detection** - Port scanning activity identification
+- **DDoS Detection** - Distributed denial of service detection
 - **ARP Spoofing Detection** - Man-in-the-middle attack detection
 - **Brute Force Detection** - Login attempt monitoring
 - **Anomaly Detection** - Behavioral analysis
@@ -123,184 +123,184 @@ Basic security vulnerability scanning:
 Multiple output formats:
 
 - **JSON Export** - Machine-readable format
+- **TXT Report** - Human-readable text format
 - **HTML Report** - Visual web-based report
-- **Text Summary** - CLI-based output
 - **CSV Export** - Spreadsheet compatible
 - **PDF Report** - Professional documentation
 
 ---
 
-## 🚀 Instalasi
+## 🚀 Installation
 
-### Prasyarat Sistem
+### System Requirements
 
 **Minimum Requirements:**
-- Python 3.8 atau lebih tinggi
+- Python 3.8 or higher
 - 2GB RAM
 - 100MB disk space
-- Administrator/root privileges (untuk packet capture)
+- Administrator/root privileges (for packet capture)
 
-**Sistem Operasi:**
+**Operating Systems:**
 - ✅ Windows 10/11
 - ✅ Ubuntu 20.04+
 - ✅ Debian 11+
 - ✅ macOS 11+
 - ✅ Kali Linux
 
-### 📦 Metode 1: Instalasi Manual
+### 📦 Method 1: Manual Installation
 
 #### Windows
 
 ```powershell
 # Clone repository
-git clone https://github.com/cybersecurity-student/cybernet-sentinel.git
+git clone https://github.com/HudzaifahArrantisi/Cyber-Sentinel.git
 cd cybernet-sentinel
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Install Npcap (Required for packet capture)
-# Download dari: https://npcap.com/#download
+# Download from: https://npcap.com/#download
 
-# Jalankan sebagai Administrator
+# Run as Administrator
 python network_analyzer.py
 ```
 
 #### Linux/Ubuntu
 
 ```bash
-# Update sistem
+# Update system
 sudo apt update
 
 # Install dependencies
 sudo apt install -y python3 python3-pip nmap tcpdump libpcap-dev
 
 # Clone repository
-git clone https://github.com/cybersecurity-student/cybernet-sentinel.git
+git clone https://github.com/HudzaifahArrantisi/Cyber-Sentinel.git
 cd cybernet-sentinel
 
 # Install Python packages
 pip3 install -r requirements.txt
 
-# Jalankan dengan sudo
+# Run with sudo
 sudo python3 network_analyzer.py
 ```
 
 #### macOS
 
 ```bash
-# Install Homebrew jika belum ada
+# Install Homebrew if not installed
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
 # Install dependencies
 brew install python3 nmap libpcap
 
 # Clone repository
-git clone https://github.com/cybersecurity-student/cybernet-sentinel.git
+git clone https://github.com/HudzaifahArrantisi/Cyber-Sentinel.git
 cd cybernet-sentinel
 
 # Install Python packages
 pip3 install -r requirements.txt
 
-# Jalankan dengan sudo
+# Run with sudo
 sudo python3 network_analyzer.py
 ```
 
-### 📦 Metode 2: Instalasi via Script
+### 📦 Method 2: Script Installation
 
 #### Windows
 ```powershell
-# Download dan jalankan installer
+# Download and run installer
 .\install_windows.ps1
 ```
 
 #### Linux
 ```bash
-# Download dan jalankan installer
+# Download and run installer
 chmod +x install_linux.sh
 sudo ./install_linux.sh
 ```
 
-### 📦 Metode 3: Docker (Recommended)
+### 📦 Method 3: Docker (Recommended)
 
 ```bash
 # Build Docker image
 docker build -t cybernet-sentinel .
 
-# Jalankan container
+# Run container
 docker run -it --network host --privileged cybernet-sentinel
 
-# Atau dengan docker-compose
+# Or with docker-compose
 docker-compose up
 ```
 
 ---
 
-## 🎯 Penggunaan
+## 🎯 Usage
 
 ### Quick Start
 
 ```bash
-# Jalankan program
+# Run the program
 python network_analyzer.py
 
-# Menu utama akan muncul
-# Pilih opsi sesuai kebutuhan (1-9)
+# Main menu will appear
+# Select options according to your needs (1-9)
 ```
 
-### 📚 Panduan Lengkap
+### 📚 Complete Guide
 
 #### 1️⃣ Select Network Interface
 ```
-Pilih interface jaringan yang akan digunakan untuk scanning
+Select the network interface to be used for scanning
 
-Langkah:
-1. Pilih option 1 dari main menu
-2. Pilih interface dari daftar yang tersedia
-3. Interface akan diset untuk operasi selanjutnya
+Steps:
+1. Select option 1 from main menu
+2. Choose interface from the available list
+3. Interface will be set for subsequent operations
 ```
 
 #### 2️⃣ Network Discovery
 ```
-Scan jaringan untuk menemukan host aktif
+Scan network to find active hosts
 
-Langkah:
-1. Pastikan interface sudah dipilih
-2. Pilih option 2
-3. Tunggu proses scanning selesai
-4. Lihat daftar host yang ditemukan
+Steps:
+1. Ensure interface is already selected
+2. Select option 2
+3. Wait for scanning process to complete
+4. View list of discovered hosts
 
-Metode yang digunakan:
-- ARP Scan (lebih cepat untuk local network)
+Methods used:
+- ARP Scan (faster for local network)
 - Ping Sweep (fallback method)
 ```
 
 #### 3️⃣ Port Scanner
 ```
-Scan port pada target host
+Scan ports on target host
 
-Langkah:
-1. Pilih option 3
-2. Pilih target dari daftar atau input IP manual
-3. Tentukan port range (default: 1-1024)
-4. Atur jumlah threads (default: 100)
-5. Tunggu hasil scanning
+Steps:
+1. Select option 3
+2. Choose target from list or input IP manually
+3. Specify port range (default: 1-1024)
+4. Set number of threads (default: 200)
+5. Wait for scanning results
 
 Tips:
-- Port 1-1024: Common ports (cepat)
+- Port 1-1024: Common ports (fast)
 - Port 1-10000: Extended scan (medium)
-- Port 1-65535: Full port scan (lambat)
+- Port 1-65535: Full port scan (slow)
 ```
 
 #### 4️⃣ Network Sniffer
 ```
-Capture dan analisis traffic jaringan
+Capture and analyze network traffic
 
-Langkah:
-1. Pilih option 4
-2. Tentukan jumlah packet yang akan di-capture
-3. Atur BPF filter (optional)
-4. Tekan Ctrl+C untuk stop
+Steps:
+1. Select option 4
+2. Specify number of packets to capture
+3. Set BPF filter (optional)
+4. Press Ctrl+C to stop
 
 BPF Filter Examples:
 - "tcp port 80"     -> HTTP traffic only
@@ -311,14 +311,14 @@ BPF Filter Examples:
 
 #### 5️⃣ Attack Detection
 ```
-Analisis traffic untuk deteksi serangan
+Analyze traffic for attack detection
 
-Langkah:
-1. Pastikan sudah capture traffic (option 4)
-2. Pilih option 5
-3. Lihat hasil analisis ancaman
+Steps:
+1. Ensure traffic has been captured (option 4)
+2. Select option 5
+3. View threat analysis results
 
-Deteksi yang tersedia:
+Available detections:
 - SYN Flood
 - Port Scanning
 - DDoS Attack
@@ -327,33 +327,32 @@ Deteksi yang tersedia:
 
 #### 6️⃣ Comprehensive Security Audit
 ```
-Audit keamanan lengkap secara otomatis
+Complete security audit automatically
 
-Langkah:
-1. Pilih option 6
-2. Program akan otomatis:
+Steps:
+1. Select option 6
+2. Program will automatically:
    - Select interface
    - Network discovery
-   - Port scanning (5 host pertama)
+   - Port scanning (first 5 hosts)
    - Traffic capture (200 packets)
    - Attack detection
    - Generate report
+3. Option to save report to TXT file
 ```
 
 #### 7️⃣ Export Results
 ```
-Ekspor hasil ke file
+Export results to file
 
-Format yang didukung:
-- JSON (default)
-- HTML
-- CSV
-- TXT
+Supported formats:
+- TXT (readable text report)
+- JSON (structured data)
 ```
 
 #### 8️⃣ Display Summary
 ```
-Tampilkan ringkasan hasil analisis di terminal
+Display analysis results summary in terminal
 ```
 
 ---
@@ -361,7 +360,7 @@ Tampilkan ringkasan hasil analisis di terminal
 ## 🐳 Docker Deployment
 
 ### Dockerfile
-File Dockerfile sudah disediakan untuk kemudahan deployment.
+Dockerfile is provided for easy deployment.
 
 ### Build & Run
 
@@ -380,10 +379,10 @@ docker run -it --rm \
 ### Docker Compose
 
 ```bash
-# Jalankan dengan compose
+# Run with compose
 docker-compose up -d
 
-# Akses container
+# Access container
 docker-compose exec sentinel bash
 
 # Stop container
@@ -393,14 +392,14 @@ docker-compose down
 ### Docker Command Examples
 
 ```bash
-# Run dengan volume mount
+# Run with volume mount
 docker run -it --rm \
   --network host \
   --privileged \
   -v $(pwd)/reports:/app/reports \
   cybernet-sentinel:latest
 
-# Run dengan environment variables
+# Run with environment variables
 docker run -it --rm \
   --network host \
   --privileged \
@@ -408,7 +407,7 @@ docker run -it --rm \
   -e SCAN_PORTS="1-10000" \
   cybernet-sentinel:latest
 
-# Run dengan custom command
+# Run with custom command
 docker run -it --rm \
   --network host \
   --privileged \
@@ -418,12 +417,12 @@ docker run -it --rm \
 
 ---
 
-## 📚 Dokumentasi
+## 📚 Documentation
 
 ### API Documentation
-Dokumentasi lengkap tersedia di folder `docs/`:
-- [User Guide](docs/user_guide.md) - Panduan pengguna lengkap
-- [Developer Guide](docs/developer_guide.md) - Panduan developer
+Complete documentation available in `docs/` folder:
+- [User Guide](docs/user_guide.md) - Complete user guide
+- [Developer Guide](docs/developer_guide.md) - Developer guide
 - [API Reference](docs/api.md) - API documentation
 
 ### Code Structure
@@ -456,18 +455,18 @@ cybernet-sentinel/
 
 ### Configuration
 
-Edit `config.yaml` untuk custom configuration:
+Edit `config.yaml` for custom configuration:
 
 ```yaml
 # config.yaml
 network:
-  interface: "auto"          # Interface name atau "auto"
-  timeout: 5                 # Timeout dalam detik
-  threads: 100              # Jumlah threads untuk scanning
+  interface: "auto"          # Interface name or "auto"
+  timeout: 5                 # Timeout in seconds
+  threads: 200              # Number of threads for scanning
 
 scanning:
   default_port_range: "1-1024"
-  scan_timeout: 1
+  scan_timeout: 0.5
   enable_udp_scan: true
   enable_banner_grab: true
 
@@ -499,7 +498,7 @@ reporting:
 # Install missing modules
 pip install -r requirements.txt
 
-# Untuk netifaces issue di Windows
+# For netifaces issue on Windows
 pip install netifaces-plus
 ```
 
@@ -535,7 +534,7 @@ ipconfig
 ifconfig
 ip addr show
 
-# Pilih interface yang aktif dan terhubung
+# Select an active and connected interface
 ```
 
 ---
@@ -575,9 +574,9 @@ python examples/vulnerability_scan.py
 
 ## 🤝 Contributing
 
-Kontribusi sangat diterima! Berikut cara berkontribusi:
+Contributions are very welcome! Here's how to contribute:
 
-1. Fork repository ini
+1. Fork this repository
 2. Create feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to branch (`git push origin feature/AmazingFeature`)
@@ -587,7 +586,7 @@ Kontribusi sangat diterima! Berikut cara berkontribusi:
 
 ```bash
 # Clone repository
-git clone https://github.com/cybersecurity-student/cybernet-sentinel.git
+git clone https://github.com/HudzaifahArrantisi/Cyber-Sentinel.git
 cd cybernet-sentinel
 
 # Create virtual environment
@@ -610,29 +609,29 @@ pylint src/
 
 ## ⚠️ Legal Disclaimer
 
-**PENTING: Gunakan tool ini hanya untuk tujuan legal dan etis!**
+**IMPORTANT: Use this tool only for legal and ethical purposes!**
 
-- ✅ **Legal Use**: Pengujian keamanan pada sistem sendiri atau dengan izin tertulis
-- ✅ **Educational**: Pembelajaran dan penelitian cybersecurity
-- ✅ **Authorized Testing**: Penetration testing dengan proper authorization
+- ✅ **Legal Use**: Security testing on own systems or with written permission
+- ✅ **Educational**: Cybersecurity learning and research
+- ✅ **Authorized Testing**: Penetration testing with proper authorization
 
-- ❌ **Illegal Use**: Unauthorized access atau scanning tanpa izin
-- ❌ **Malicious Intent**: Menggunakan untuk tujuan jahat atau kriminal
-- ❌ **Privacy Violation**: Melanggar privasi orang lain
+- ❌ **Illegal Use**: Unauthorized access or scanning without permission
+- ❌ **Malicious Intent**: Using for malicious or criminal purposes
+- ❌ **Privacy Violation**: Violating others' privacy
 
-**Tanggung Jawab Pengguna:**
-Pengguna bertanggung jawab penuh atas penggunaan tool ini. Developer tidak bertanggung jawab atas penyalahgunaan atau kerusakan yang ditimbulkan.
+**User Responsibility:**
+Users are fully responsible for the use of this tool. Developers are not responsible for misuse or damage caused.
 
 ---
 
-## 📜 Lisensi
+## 📜 License
 
-Proyek ini dilisensikan di bawah MIT License - lihat file [LICENSE](LICENSE) untuk detail lengkap.
+This project is licensed under MIT License - see [LICENSE](LICENSE) file for complete details.
 
 ```
 MIT License
 
-Copyright (c) 2024-2026 Cybersecurity Student
+Copyright (c) 2024-2026 Candalena
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -652,31 +651,31 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 
 ## 👨‍💻 Author
 
-**Cybersecurity Student**
+**Candalena**
 - 🎓 Semester 3 - Web Security Course
 - 🏫 Final Project - Network Security Analysis Tool
-- 📧 Email: [your-email@example.com](mailto:your-email@example.com)
-- 🔗 GitHub: [@cybersecurity-student](https://github.com/cybersecurity-student)
+- 📧 Email: [hudzaifaharrantisi@gmail.com](mailto:hudzaifaharrantisi@gmail.com)
+- 🔗 GitHub: [@HudzaifahArrantisi](https://github.com/HudzaifahArrantisi)
 
 ---
 
 ## 🙏 Acknowledgments
 
-Terima kasih kepada:
-- Scapy Project untuk packet manipulation library
-- Python Community untuk ecosystem yang luar biasa
-- Dosen pembimbing untuk guidance dan support
-- Open source contributors yang menginspirasi project ini
+Special thanks to:
+- Scapy Project for packet manipulation library
+- Python Community for amazing ecosystem
+- Course instructor for guidance and support
+- Open source contributors who inspired this project
 
 ---
 
 ## 📞 Support
 
-Butuh bantuan? Silakan:
-- 📖 Baca [Documentation](docs/)
-- 🐛 Report bugs via [Issues](https://github.com/cybersecurity-student/cybernet-sentinel/issues)
-- 💬 Diskusi di [Discussions](https://github.com/cybersecurity-student/cybernet-sentinel/discussions)
-- 📧 Email ke [support@example.com](mailto:support@example.com)
+Need help? Please:
+- 📖 Read [Documentation](docs/)
+- 🐛 Report bugs via [Issues](https://github.com/HudzaifahArrantisi/Cyber-Sentinel/issues)
+- 💬 Discuss at [Discussions](https://github.com/HudzaifahArrantisi/Cyber-Sentinel/discussions)
+- 📧 Email to [hudzaifaharrantisi@gmail.com](mailto:hudzaifaharrantisi@gmail.com)
 
 ---
 
@@ -693,7 +692,7 @@ Butuh bantuan? Silakan:
 - [ ] IPv6 support
 - [ ] Wireless network analysis
 - [ ] SSL/TLS vulnerability scanning
-- [ ] Integration dengan SIEM tools
+- [ ] SIEM tools integration
 - [ ] Mobile app (Android/iOS)
 
 ### Version 3.0 (Q3 2026)
@@ -709,9 +708,9 @@ Butuh bantuan? Silakan:
 
 ### ⭐ Star this repository if you find it useful!
 
-**Candalena**
+**Made with ❤️ by Candalena**
 
-[Report Bug](https://github.com/cybersecurity-student/cybernet-sentinel/issues) • [Request Feature](https://github.com/cybersecurity-student/cybernet-sentinel/issues) • [Documentation](docs/)
+[Report Bug](https://github.com/HudzaifahArrantisi/Cyber-Sentinel/issues) • [Request Feature](https://github.com/HudzaifahArrantisi/Cyber-Sentinel/issues) • [Documentation](docs/)
 
 ---
 
