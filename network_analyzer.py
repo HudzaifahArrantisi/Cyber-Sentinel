@@ -58,22 +58,31 @@ class NetworkSecurityAnalyzer:
     def banner(self):
         """Display enhanced tool banner"""
         banner = f"""
-{Fore.CYAN}{'═'*75}
-{Fore.GREEN}
-   ██████╗██╗   ██╗██████╗ ███████╗██████╗ ███╗   ██╗███████╗████████╗
-  ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗████╗  ██║██╔════╝╚══██╔══╝
-  ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝██╔██╗ ██║█████╗     ██║   
-  ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗██║╚██╗██║██╔══╝     ██║   
-  ╚██████╗   ██║   ██████╔╝███████╗██║  ██║██║ ╚████║███████╗   ██║   
-   ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝   
-{Fore.YELLOW}              █▀ █▀▀ █▄░█ ▀█▀ █ █▄░█ █▀▀ █░░
-              ▄█ ██▄ █░▀█ ░█░ █ █░▀█ ██▄ █▄▄
-{Fore.CYAN}          Advanced Network Security Analyzer v2.1 Pro
-{Fore.CYAN}{'═'*75}
-{Fore.MAGENTA}        🔥 Cybernet Sentinel By Candalena 🔥
-{Fore.WHITE}  Author: Cybersecurity Student | Semester 3
-{Fore.CYAN}  Features: {Fore.GREEN}Fast Scan {Fore.CYAN}| {Fore.GREEN}Deep Analysis {Fore.CYAN}| {Fore.GREEN}Attack Detection
-{Fore.CYAN}{'═'*75}
+{Fore.CYAN}╔{'═'*77}╗
+║{' '*77}║
+{Fore.GREEN}║   ██████╗██╗   ██╗██████╗ ███████╗██████╗ ███╗   ██╗███████╗████████╗ {Fore.CYAN}  ║
+{Fore.GREEN}║  ██╔════╝╚██╗ ██╔╝██╔══██╗██╔════╝██╔══██╗████╗  ██║██╔════╝╚══██╔══╝ {Fore.CYAN}  ║
+{Fore.GREEN}║  ██║      ╚████╔╝ ██████╔╝█████╗  ██████╔╝██╔██╗ ██║█████╗     ██║    {Fore.CYAN}  ║
+{Fore.GREEN}║  ██║       ╚██╔╝  ██╔══██╗██╔══╝  ██╔══██╗██║╚██╗██║██╔══╝     ██║    {Fore.CYAN}  ║
+{Fore.GREEN}║  ╚██████╗   ██║   ██████╔╝███████╗██║  ██║██║ ╚████║███████╗   ██║    {Fore.CYAN}  ║
+{Fore.GREEN}║   ╚═════╝   ╚═╝   ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝  ╚═══╝╚══════╝   ╚═╝    {Fore.CYAN}  ║
+║{' '*77}║
+{Fore.YELLOW}║              ╔═══╗╔═══╗╔═╗ ╔╗╔════╗╔══╗╔═╗ ╔╗╔═══╗╔═══╗              {Fore.CYAN}  ║
+{Fore.YELLOW}║              ║╔═╗║║╔══╝║║╚╗║║╚═╗  ║╔╗║║║╚╗║║║╔══╝║╔═╗║              {Fore.CYAN}  ║
+{Fore.YELLOW}║              ║╚══╗║╚══╗║╔╗╚╝║  ║  ║║║║║╔╗╚╝║║╚══╗║║ ║║              {Fore.CYAN}  ║
+{Fore.YELLOW}║              ╚══╗║║╔══╝║║╚╗║║  ║  ║║║║║║╚╗║║║╔══╝║║ ║║              {Fore.CYAN}  ║
+{Fore.YELLOW}║              ║╚═╝║║╚══╗║║ ║║║  ║  ║║║║║║ ║║║║╚══╗║╚═╝║              {Fore.CYAN}  ║
+{Fore.YELLOW}║              ╚═══╝╚═══╝╚╝ ╚═╝  ╚  ╚╝╚╝╚╝ ╚═╝╚═══╝╚═══╝              {Fore.CYAN}  ║
+║{' '*77}║
+║{Fore.WHITE}          Advanced Network Security Analyzer & Threat Hunter{' '*10}{Fore.CYAN}║
+║{Fore.MAGENTA}                          ⚡ Version 2.1 Professional ⚡{' '*17}{Fore.CYAN}║
+║{' '*77}║
+╠{'═'*77}╣
+║  {Fore.WHITE}👤 Author    : {Fore.GREEN}Candalena - Cybersecurity Student{' '*26}{Fore.CYAN}║
+║  {Fore.WHITE}🎓 Semester  : {Fore.GREEN}3/4{' '*60}{Fore.CYAN}║
+║  {Fore.WHITE}🔧 Features  : {Fore.GREEN}Fast Scan {Fore.WHITE}│ {Fore.GREEN}Deep Analysis {Fore.WHITE}│ {Fore.GREEN}Attack Detection{' '*19}{Fore.CYAN}║
+║  {Fore.WHITE}🎯 Purpose   : {Fore.GREEN}Network Monitoring & Security Assessment{' '*21}{Fore.CYAN}║
+╚{'═'*77}╝{Style.RESET_ALL}
         """
         print(banner)
     
@@ -130,14 +139,14 @@ class NetworkSecurityAnalyzer:
     
     def port_scanner(self, target_ip, start_port=1, end_port=1024, timeout=0.5, threads=200):
         """Ultra-fast port scanner with threading and progress bar"""
-        print(f"\n{Fore.CYAN}{'─'*75}")
-        print(f"{Fore.YELLOW}🔍 ADVANCED PORT SCANNER")
-        print(f"{Fore.CYAN}{'─'*75}")
-        print(f"{Fore.WHITE}  Target IP    : {Fore.GREEN}{target_ip}")
-        print(f"{Fore.WHITE}  Port Range   : {Fore.GREEN}{start_port}-{end_port} {Fore.CYAN}({end_port-start_port+1} ports)")
-        print(f"{Fore.WHITE}  Threads      : {Fore.GREEN}{threads}")
-        print(f"{Fore.WHITE}  Timeout      : {Fore.GREEN}{timeout}s")
-        print(f"{Fore.CYAN}{'─'*75}\n")
+        print(f"\n{Fore.CYAN}╔{'═'*77}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔍 ADVANCED PORT SCANNER{' '*52}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═'*77}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Target IP    : {Fore.GREEN}{target_ip:<58}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Port Range   : {Fore.GREEN}{start_port}-{end_port} {Fore.CYAN}({end_port-start_port+1} ports){' '*(48-len(str(start_port))-len(str(end_port))-len(str(end_port-start_port+1)))}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Threads      : {Fore.GREEN}{threads:<58}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Timeout      : {Fore.GREEN}{timeout}s{' '*55}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*77}╝\n")
         
         open_ports = []
         scan_start = time.time()
@@ -224,14 +233,14 @@ class NetworkSecurityAnalyzer:
         self.scan_stats['scan_duration'] = scan_duration
         
         # Display scan summary
-        print(f"\n{Fore.CYAN}{'─'*75}")
-        print(f"{Fore.GREEN}✓ SCAN COMPLETE")
-        print(f"{Fore.CYAN}{'─'*75}")
-        print(f"{Fore.WHITE}  Total Ports Scanned : {Fore.GREEN}{self.scan_stats['ports_scanned']}")
-        print(f"{Fore.WHITE}  Open Ports Found    : {Fore.GREEN}{len(open_ports)}")
-        print(f"{Fore.WHITE}  Scan Duration       : {Fore.GREEN}{scan_duration:.2f}s")
-        print(f"{Fore.WHITE}  Scan Rate           : {Fore.GREEN}{self.scan_stats['ports_scanned']/scan_duration:.0f} ports/sec")
-        print(f"{Fore.CYAN}{'─'*75}")
+        print(f"\n{Fore.CYAN}╔{'═'*77}╗")
+        print(f"{Fore.CYAN}║ {Fore.GREEN}✓ SCAN COMPLETE{' '*60}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╠{'═'*77}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Total Ports Scanned : {Fore.GREEN}{self.scan_stats['ports_scanned']:<52}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Open Ports Found    : {Fore.GREEN}{len(open_ports):<52}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Scan Duration       : {Fore.GREEN}{scan_duration:.2f}s{' '*49}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Scan Rate           : {Fore.GREEN}{self.scan_stats['ports_scanned']/scan_duration:.0f} ports/sec{' '*(44-len(str(int(self.scan_stats['ports_scanned']/scan_duration))))}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*77}╝")
         
         return open_ports
     
@@ -255,11 +264,12 @@ class NetworkSecurityAnalyzer:
         return None
     
     def arp_scan(self, network_range):
-        """ARP scan to discover active hosts"""
+        """ARP scan to discover active hosts with improved detection"""
         print(f"\n{Fore.YELLOW}[*] Scanning network {network_range} for active hosts...")
-        print(f"{Fore.CYAN}[*] Using ARP scan (if fails, will fallback to ping sweep)")
+        print(f"{Fore.CYAN}[*] Using enhanced ARP scan (timeout: 5s, retries: 3)")
         
         active_hosts = []
+        found_ips = set()
         
         # Suppress ALL Scapy output including stderr and logging
         import sys
@@ -281,40 +291,64 @@ class NetworkSecurityAnalyzer:
             conf.verb = 0
             
             try:
-                # Create ARP request packet
-                arp = ARP(pdst=network_range)
-                ether = Ether(dst="ff:ff:ff:ff:ff:ff")
-                packet = ether/arp
+                # Perform multiple ARP scans with different timeouts for better detection
+                for retry in range(3):
+                    # Create ARP request packet
+                    arp = ARP(pdst=network_range)
+                    ether = Ether(dst="ff:ff:ff:ff:ff:ff")
+                    packet = ether/arp
+                    
+                    # Perform ARP scan with increased timeout
+                    result = srp(packet, timeout=5, retry=2, verbose=0)[0]
+                    
+                    for sent, received in result:
+                        if received.psrc not in found_ips:
+                            found_ips.add(received.psrc)
+                            
+                            # Restore output temporarily to print result
+                            sys.stdout = old_stdout
+                            sys.stderr = old_stderr
+                            
+                            hostname = self.resolve_hostname(received.psrc)
+                            vendor = self.get_mac_vendor(received.hwsrc)
+                            
+                            print(f"{Fore.GREEN}[+] Host: {received.psrc:15} | MAC: {received.hwsrc} | Hostname: {hostname} | Vendor: {vendor}")
+                            
+                            active_hosts.append({
+                                'ip': received.psrc,
+                                'mac': received.hwsrc,
+                                'hostname': hostname,
+                                'vendor': vendor
+                            })
+                            
+                            # Suppress output again
+                            sys.stdout = io.StringIO()
+                            sys.stderr = io.StringIO()
                 
-                # Perform ARP scan
-                result = srp(packet, timeout=3, verbose=0)[0]
-                
-                # Restore output before printing results
+                # Restore output
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
                 logging.disable(old_log_level)
                 
-                for sent, received in result:
-                    hostname = self.resolve_hostname(received.psrc)
-                    vendor = self.get_mac_vendor(received.hwsrc)
+                # If ARP found few hosts, supplement with ping sweep
+                if len(active_hosts) < 5:
+                    print(f"{Fore.YELLOW}[*] Supplementing with ping sweep for better coverage...")
+                    ping_hosts = self.ping_sweep(network_range)
                     
-                    print(f"{Fore.GREEN}[+] Host: {received.psrc:15} | MAC: {received.hwsrc} | Hostname: {hostname} | Vendor: {vendor}")
+                    # Merge results, avoiding duplicates
+                    for host in ping_hosts:
+                        if host['ip'] not in found_ips:
+                            active_hosts.append(host)
+                            found_ips.add(host['ip'])
                     
-                    active_hosts.append({
-                        'ip': received.psrc,
-                        'mac': received.hwsrc,
-                        'hostname': hostname,
-                        'vendor': vendor
-                    })
-                    
-            except Exception:
+            except Exception as e:
                 # Restore output on error
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
                 logging.disable(old_log_level)
                 
-                # Silently fall back to ping sweep
-                print(f"{Fore.YELLOW}[*] ARP scan unavailable, using ping sweep...")
+                # Fall back to ping sweep
+                print(f"{Fore.YELLOW}[*] ARP scan failed, using ping sweep...")
                 active_hosts = self.ping_sweep(network_range)
                 
         finally:
@@ -326,51 +360,102 @@ class NetworkSecurityAnalyzer:
         return active_hosts
     
     def ping_sweep(self, network_range):
-        """Fast ping sweep with progress bar"""
-        print(f"\n{Fore.CYAN}[*] Performing fast ping sweep...")
+        """Enhanced ping sweep with multiple detection methods"""
+        print(f"\n{Fore.CYAN}[*] Performing enhanced host discovery...")
+        print(f"{Fore.CYAN}[*] Using ICMP Echo + TCP SYN + UDP probes")
         
         active_hosts = []
+        found_ips = set()
         network = ipaddress.ip_network(network_range, strict=False)
         total_hosts = sum(1 for _ in network.hosts())
         
-        def ping_host(ip):
+        def multi_probe_host(ip):
+            """Try multiple methods to detect if host is alive"""
+            ip_str = str(ip)
+            
+            # Method 1: ICMP Ping (standard)
             try:
                 param = '-n' if platform.system().lower() == 'windows' else '-c'
-                command = ['ping', param, '1', '-w', '500', str(ip)]
+                timeout_param = '-w' if platform.system().lower() == 'windows' else '-W'
+                command = ['ping', param, '2', timeout_param, '1000', ip_str]
                 
-                result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, creationflags=subprocess.CREATE_NO_WINDOW if platform.system() == "Windows" else 0)
+                result = subprocess.run(
+                    command, 
+                    stdout=subprocess.PIPE, 
+                    stderr=subprocess.PIPE,
+                    creationflags=subprocess.CREATE_NO_WINDOW if platform.system() == "Windows" else 0,
+                    timeout=3
+                )
                 
                 if result.returncode == 0:
-                    hostname = self.resolve_hostname(str(ip))
-                    
-                    return {
-                        'ip': str(ip),
-                        'mac': 'Unknown',
-                        'hostname': hostname,
-                        'vendor': 'Unknown'
-                    }
+                    return ip_str
             except:
                 pass
+            
+            # Method 2: TCP SYN to common ports (for hosts that block ICMP)
+            try:
+                for port in [80, 443, 22, 3389, 445, 135]:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock.settimeout(0.5)
+                    result = sock.connect_ex((ip_str, port))
+                    sock.close()
+                    
+                    if result == 0 or result == 10061:  # Connected or Connection Refused (host is up)
+                        return ip_str
+            except:
+                pass
+            
+            # Method 3: UDP probe (some hosts respond to UDP)
+            try:
+                sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+                sock.settimeout(0.3)
+                sock.sendto(b'\x00', (ip_str, 53))  # DNS port
+                try:
+                    sock.recvfrom(1024)
+                    sock.close()
+                    return ip_str
+                except:
+                    sock.close()
+            except:
+                pass
+            
             return None
         
-        with ThreadPoolExecutor(max_workers=100) as executor:
-            with tqdm(total=total_hosts, desc=f"{Fore.CYAN}Ping Sweep", colour='blue') as pbar:
-                futures = [executor.submit(ping_host, ip) for ip in network.hosts()]
+        print(f"{Fore.CYAN}[*] Scanning {total_hosts} hosts (this may take a moment)...\n")
+        
+        with ThreadPoolExecutor(max_workers=50) as executor:
+            with tqdm(total=total_hosts, desc=f"{Fore.CYAN}Host Discovery", colour='blue', ncols=80) as pbar:
+                futures = [executor.submit(multi_probe_host, ip) for ip in network.hosts()]
                 
                 for future in futures:
                     result = future.result()
-                    if result:
-                        active_hosts.append(result)
-                        print(f"\r{Fore.GREEN}[✓] Host {result['ip']:15} - {result['hostname']:30}")
+                    if result and result not in found_ips:
+                        found_ips.add(result)
+                        hostname = self.resolve_hostname(result)
+                        
+                        host_info = {
+                            'ip': result,
+                            'mac': 'Unknown',
+                            'hostname': hostname,
+                            'vendor': 'Unknown'
+                        }
+                        
+                        active_hosts.append(host_info)
+                        print(f"\r{Fore.GREEN}[✓] Host {result:15} - {hostname:30}")
+                    
                     pbar.update(1)
         
         return active_hosts
     
     def resolve_hostname(self, ip):
-        """Resolve IP to hostname"""
+        """Resolve IP to hostname with timeout"""
         try:
-            return socket.gethostbyaddr(ip)[0]
+            socket.setdefaulttimeout(1)  # 1 second timeout
+            hostname = socket.gethostbyaddr(ip)[0]
+            socket.setdefaulttimeout(None)
+            return hostname
         except:
+            socket.setdefaulttimeout(None)
             return "Unknown"
     
     def get_mac_vendor(self, mac_address):
@@ -687,14 +772,17 @@ class NetworkSecurityAnalyzer:
     
     def display_summary(self):
         """Display comprehensive analysis summary with tables"""
-        print(f"\n{Fore.CYAN}{'═'*75}")
-        print(f"{Fore.YELLOW}           📊 NETWORK SECURITY ANALYSIS SUMMARY")
-        print(f"{Fore.CYAN}{'═'*75}\n")
+        print(f"\n{Fore.CYAN}╔{'═'*77}╗")
+        print(f"{Fore.CYAN}║{' '*77}║")
+        print(f"{Fore.CYAN}║{Fore.YELLOW}           📊 NETWORK SECURITY ANALYSIS SUMMARY{' '*21}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║{' '*77}║")
+        print(f"{Fore.CYAN}╚{'═'*77}╝\n")
         
         # Host Discovery Summary with Table
         if self.active_hosts:
-            print(f"{Fore.GREEN}[✓] HOST DISCOVERY RESULTS")
-            print(f"{Fore.CYAN}{'─'*75}")
+            print(f"{Fore.CYAN}╔{'═'*77}╗")
+            print(f"{Fore.CYAN}║ {Fore.GREEN}✓ HOST DISCOVERY RESULTS{' '*51}{Fore.CYAN} ║")
+            print(f"{Fore.CYAN}╚{'═'*77}╝")
             
             host_table = []
             for i, host in enumerate(self.active_hosts, 1):
@@ -713,8 +801,9 @@ class NetworkSecurityAnalyzer:
         
         # Port Scan Summary with Table
         if self.open_ports:
-            print(f"\n{Fore.GREEN}[✓] PORT SCANNING RESULTS")
-            print(f"{Fore.CYAN}{'─'*75}")
+            print(f"\n{Fore.CYAN}╔{'═'*77}╗")
+            print(f"{Fore.CYAN}║ {Fore.GREEN}✓ PORT SCANNING RESULTS{' '*52}{Fore.CYAN} ║")
+            print(f"{Fore.CYAN}╚{'═'*77}╝")
             
             for ip, ports in self.open_ports.items():
                 print(f"\n{Fore.YELLOW}Target: {Fore.GREEN}{ip}")
@@ -736,8 +825,9 @@ class NetworkSecurityAnalyzer:
         
         # Security Threats with Table
         if self.detected_attacks:
-            print(f"\n{Fore.RED}[!] SECURITY THREATS DETECTED")
-            print(f"{Fore.CYAN}{'─'*75}")
+            print(f"\n{Fore.CYAN}╔{'═'*77}╗")
+            print(f"{Fore.CYAN}║ {Fore.RED}⚠ SECURITY THREATS DETECTED{' '*48}{Fore.CYAN} ║")
+            print(f"{Fore.CYAN}╚{'═'*77}╝")
             
             threat_table = []
             for i, attack in enumerate(self.detected_attacks, 1):
@@ -798,13 +888,13 @@ class NetworkSecurityAnalyzer:
         
         while True:
             print(f"\n{Fore.CYAN}{'═'*75}")
-            print(f"{Fore.YELLOW}                        🎯 MAIN MENU")
+            print(f"{Fore.YELLOW}                         MAIN MENU")
             print(f"{Fore.CYAN}{'═'*75}")
-            print(f"{Fore.GREEN}  [1]{Fore.WHITE} 📡 Select Network Interface      {Fore.CYAN}│ {Fore.GREEN}[6]{Fore.WHITE} 🔒 Comprehensive Audit")
-            print(f"{Fore.GREEN}  [2]{Fore.WHITE} 🌐 Network Discovery             {Fore.CYAN}│ {Fore.GREEN}[7]{Fore.WHITE} 💾 Export Results")
-            print(f"{Fore.GREEN}  [3]{Fore.WHITE} 🚪 Port Scanner (Fast!)          {Fore.CYAN}│ {Fore.GREEN}[8]{Fore.WHITE} 📊 Display Summary")
-            print(f"{Fore.GREEN}  [4]{Fore.WHITE} 👂 Network Sniffer               {Fore.CYAN}│ {Fore.GREEN}[9]{Fore.WHITE} ❌ Exit")
-            print(f"{Fore.GREEN}  [5]{Fore.WHITE} ⚠️  Attack Detection              {Fore.CYAN}│")
+            print(f"{Fore.GREEN}  [1]{Fore.WHITE}  Select Network Interface      {Fore.CYAN}│ {Fore.GREEN}[6]{Fore.WHITE} 🔒 Comprehensive Audit")
+            print(f"{Fore.GREEN}  [2]{Fore.WHITE}  Network Discovery             {Fore.CYAN}│ {Fore.GREEN}[7]{Fore.WHITE} 💾 Export Results")
+            print(f"{Fore.GREEN}  [3]{Fore.WHITE}  Port Scanner (Fast!)          {Fore.CYAN}│ {Fore.GREEN}[8]{Fore.WHITE} 📊 Display Summary")
+            print(f"{Fore.GREEN}  [4]{Fore.WHITE}  Network Sniffer               {Fore.CYAN}│ {Fore.GREEN}[9]{Fore.WHITE} ❌ Exit")
+            print(f"{Fore.GREEN}  [5]{Fore.WHITE}  Attack Detection              {Fore.CYAN}│")
             print(f"{Fore.CYAN}{'═'*75}")
             
             choice = input(f"\n{Fore.GREEN}[?] Select option (1-9): {Fore.WHITE}").strip()
