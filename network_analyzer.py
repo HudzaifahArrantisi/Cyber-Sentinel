@@ -78,10 +78,10 @@ class NetworkSecurityAnalyzer:
 ║{Fore.MAGENTA}                          ⚡ Version 2.1 Professional ⚡{' '*17}{Fore.CYAN}║
 ║{' '*77}║
 ╠{'═'*77}╣
-║  {Fore.WHITE}👤 Author    : {Fore.GREEN}Candalena - Cybersecurity Student{' '*26}{Fore.CYAN}║
-║  {Fore.WHITE}🎓 Semester  : {Fore.GREEN}3/4{' '*60}{Fore.CYAN}║
-║  {Fore.WHITE}🔧 Features  : {Fore.GREEN}Fast Scan {Fore.WHITE}│ {Fore.GREEN}Deep Analysis {Fore.WHITE}│ {Fore.GREEN}Attack Detection{' '*19}{Fore.CYAN}║
-║  {Fore.WHITE}🎯 Purpose   : {Fore.GREEN}Network Monitoring & Security Assessment{' '*21}{Fore.CYAN}║
+║  {Fore.WHITE} Author    : {Fore.GREEN}Candalena - Cybersecurity Student{' '*26}{Fore.CYAN}║
+║  {Fore.WHITE} Semester  : {Fore.GREEN}3/4{' '*60}{Fore.CYAN}║
+║  {Fore.WHITE} Features  : {Fore.GREEN}Fast Scan {Fore.WHITE}│ {Fore.GREEN}Deep Analysis {Fore.WHITE}│ {Fore.GREEN}Attack Detection{' '*19}{Fore.CYAN}║
+║  {Fore.WHITE} Purpose   : {Fore.GREEN}Network Monitoring & Security Assessment{' '*21}{Fore.CYAN}║
 ╚{'═'*77}╝{Style.RESET_ALL}
         """
         print(banner)
@@ -264,9 +264,14 @@ class NetworkSecurityAnalyzer:
         return None
     
     def arp_scan(self, network_range):
-        """ARP scan to discover active hosts with improved detection"""
-        print(f"\n{Fore.YELLOW}[*] Scanning network {network_range} for active hosts...")
-        print(f"{Fore.CYAN}[*] Using enhanced ARP scan (timeout: 5s, retries: 3)")
+        """ARP scan to discover active hosts with improved detection - Like Bettercap"""
+        print(f"\n{Fore.CYAN}╔{'═'*78}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔍 NETWORK DISCOVERY - ARP SCAN{' '*46}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═'*78}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Network Range  : {Fore.GREEN}{network_range:<58}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Method         : {Fore.GREEN}Enhanced ARP Discovery (5s timeout, 3 retries){' '*14}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Hostname Detect: {Fore.GREEN}NBTStat + Ping + DNS + NetBIOS + mDNS + SNMP{' '*13}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*78}╝\n")
         
         active_hosts = []
         found_ips = set()
@@ -292,7 +297,33 @@ class NetworkSecurityAnalyzer:
             
             try:
                 # Perform multiple ARP scans with different timeouts for better detection
+                # Restore output to show header
+                sys.stdout = old_stdout
+                sys.stderr = old_stderr
+                
+                print(f"{Fore.CYAN}[*] Sending ARP requests to {network_range}...\n")
+                
+                # Print table header
+                print(f"{Fore.CYAN}╔═══╦═════════════════╦═══════════════════╦═══════════════════════════╦═══════════════════════════╗")
+                print(f"{Fore.CYAN}║ {Fore.WHITE}# {Fore.CYAN}║ {Fore.WHITE}IP Address      {Fore.CYAN}║ {Fore.WHITE}MAC Address       {Fore.CYAN}║ {Fore.WHITE}Hostname                  {Fore.CYAN}║ {Fore.WHITE}Vendor/Manufacturer   {Fore.CYAN}║")
+                print(f"{Fore.CYAN}╠═══╬═════════════════╬═══════════════════╬═══════════════════════════╬═══════════════════════════╣")
+                
+                # Suppress output for scapy
+                sys.stdout = io.StringIO()
+                sys.stderr = io.StringIO()
+                
                 for retry in range(3):
+                    # Restore output for progress message
+                    sys.stdout = old_stdout
+                    sys.stderr = old_stderr
+                    
+                    if retry > 0:
+                        print(f"{Fore.CYAN}║ {Fore.YELLOW}↻ Retry {retry}/2 - Scanning for missed hosts...{' '*67}{Fore.CYAN}║")
+                    
+                    # Suppress again for scapy
+                    sys.stdout = io.StringIO()
+                    sys.stderr = io.StringIO()
+                    
                     # Create ARP request packet
                     arp = ARP(pdst=network_range)
                     ether = Ether(dst="ff:ff:ff:ff:ff:ff")
@@ -309,17 +340,93 @@ class NetworkSecurityAnalyzer:
                             sys.stdout = old_stdout
                             sys.stderr = old_stderr
                             
-                            hostname = self.resolve_hostname(received.psrc)
+                            hostname = "Unknown"
+                            
+                            # Method 1: Try nbtstat (Windows - MOST RELIABLE for Windows networks)
+                            if platform.system() == "Windows":
+                                try:
+                                    nbtstat_result = subprocess.run(
+                                        ['nbtstat', '-A', received.psrc],
+                                        capture_output=True,
+                                        text=True,
+                                        timeout=3,
+                                        creationflags=subprocess.CREATE_NO_WINDOW
+                                    )
+                                    if nbtstat_result.returncode == 0:
+                                        output = nbtstat_result.stdout
+                                        # Parse NetBIOS Name Table
+                                        for line in output.split('\n'):
+                                            line = line.strip()
+                                            # Look for computer name (type <00> or <20>)
+                                            if '<00>' in line or '<20>' in line:
+                                                if 'UNIQUE' in line or 'GROUP' in line:
+                                                    # Extract name (first column)
+                                                    parts = line.split()
+                                                    if parts and len(parts[0]) > 0:
+                                                        name = parts[0].strip()
+                                                        # Skip special names
+                                                        if name and not name.startswith('__') and not name.startswith('.') and name != 'WORKGROUP' and name != 'MSHOME':
+                                                            if '<00>' in line and 'UNIQUE' in line:
+                                                                hostname = name
+                                                                break
+                                except:
+                                    pass
+                            
+                            # Method 2: Try ping -a (Windows)
+                            if hostname == "Unknown" and platform.system() == "Windows":
+                                try:
+                                    ping_result = subprocess.run(
+                                        ['ping', '-a', '-n', '1', received.psrc],
+                                        capture_output=True,
+                                        text=True,
+                                        timeout=2,
+                                        creationflags=subprocess.CREATE_NO_WINDOW
+                                    )
+                                    if ping_result.returncode == 0:
+                                        for line in ping_result.stdout.split('\n'):
+                                            if 'Pinging' in line and '[' in line:
+                                                hostname_part = line.split('Pinging')[1].split('[')[0].strip()
+                                                if hostname_part and hostname_part != received.psrc and '.' not in hostname_part:
+                                                    hostname = hostname_part
+                                                    break
+                                except:
+                                    pass
+                            
+                            # Method 3: DNS reverse lookup
+                            if hostname == "Unknown":
+                                try:
+                                    socket.setdefaulttimeout(2)
+                                    resolved = socket.gethostbyaddr(received.psrc)
+                                    if resolved and resolved[0]:
+                                        hostname = resolved[0].split('.')[0]
+                                    socket.setdefaulttimeout(None)
+                                except:
+                                    socket.setdefaulttimeout(None)
+                            
+                            # Method 4: Advanced methods (NetBIOS, mDNS, SNMP, HTTP)
+                            if hostname == "Unknown":
+                                hostname = self.get_device_name(received.psrc)
+                            
                             vendor = self.get_mac_vendor(received.hwsrc)
                             
-                            print(f"{Fore.GREEN}[+] Host: {received.psrc:15} | MAC: {received.hwsrc} | Hostname: {hostname} | Vendor: {vendor}")
-                            
-                            active_hosts.append({
+                            # Store host info
+                            host_info = {
                                 'ip': received.psrc,
                                 'mac': received.hwsrc,
                                 'hostname': hostname,
                                 'vendor': vendor
-                            })
+                            }
+                            active_hosts.append(host_info)
+                            
+                            # Display in table row format
+                            hostname_display = hostname if hostname != "Unknown" else f"{Fore.YELLOW}Unknown{Fore.WHITE}"
+                            vendor_display = vendor if vendor != "Unknown Vendor" else f"{Fore.YELLOW}Unknown Vendor{Fore.WHITE}"
+                            
+                            # Truncate long names to fit in table
+                            hostname_short = (hostname_display[:22] + '...') if len(hostname) > 25 else hostname_display
+                            vendor_short = (vendor_display[:22] + '...') if len(vendor) > 25 else vendor_display
+                            
+                            print(f"{Fore.CYAN}║{Fore.WHITE}{len(active_hosts):2} {Fore.CYAN}║ {Fore.GREEN}{received.psrc:15} {Fore.CYAN}║ {Fore.CYAN}{received.hwsrc:17} {Fore.CYAN}║ {Fore.WHITE}{hostname_short:25} {Fore.CYAN}║ {Fore.MAGENTA}{vendor_short:25} {Fore.CYAN}║{Fore.RESET}")
                             
                             # Suppress output again
                             sys.stdout = io.StringIO()
@@ -329,6 +436,11 @@ class NetworkSecurityAnalyzer:
                 sys.stdout = old_stdout
                 sys.stderr = old_stderr
                 logging.disable(old_log_level)
+                
+                # Close the table
+                if len(active_hosts) > 0:
+                    print(f"{Fore.CYAN}╚═══╩═════════════════╩═══════════════════╩═══════════════════════════╩═══════════════════════════╝")
+                    print(f"\n{Fore.GREEN}[✓] Scan complete! Found {len(active_hosts)} device(s)\n")
                 
                 # If ARP found few hosts, supplement with ping sweep
                 if len(active_hosts) < 5:
@@ -361,8 +473,11 @@ class NetworkSecurityAnalyzer:
     
     def ping_sweep(self, network_range):
         """Enhanced ping sweep with multiple detection methods"""
-        print(f"\n{Fore.CYAN}[*] Performing enhanced host discovery...")
-        print(f"{Fore.CYAN}[*] Using ICMP Echo + TCP SYN + UDP probes")
+        print(f"\n{Fore.CYAN}╔{'═'*78}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}🔍 PING SWEEP - MULTI-METHOD DISCOVERY{' '*38}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}╠{'═'*78}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Methods : {Fore.GREEN}ICMP Echo + TCP SYN (10 ports) + UDP Probe{' '*22}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*78}╝\n")
         
         active_hosts = []
         found_ips = set()
@@ -394,7 +509,7 @@ class NetworkSecurityAnalyzer:
             
             # Method 2: TCP SYN to common ports (for hosts that block ICMP)
             try:
-                for port in [80, 443, 22, 3389, 445, 135]:
+                for port in [80, 443, 22, 3389, 445, 135, 139, 21, 23, 25]:
                     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                     sock.settimeout(0.5)
                     result = sock.connect_ex((ip_str, port))
@@ -431,20 +546,32 @@ class NetworkSecurityAnalyzer:
                     result = future.result()
                     if result and result not in found_ips:
                         found_ips.add(result)
-                        hostname = self.resolve_hostname(result)
+                        
+                        # Try advanced hostname detection
+                        print(f"\r{Fore.YELLOW}[*] Resolving {result}...")
+                        hostname = self.get_device_name(result)
+                        
+                        # If still unknown, try standard method
+                        if hostname == "Unknown":
+                            hostname = self.resolve_hostname(result)
+                        
+                        # Try to get MAC from ARP cache
+                        mac_address = self.get_mac_from_arp_cache(result)
+                        vendor = self.get_mac_vendor(mac_address) if mac_address != "Unknown" else "Unknown Vendor"
                         
                         host_info = {
                             'ip': result,
-                            'mac': 'Unknown',
+                            'mac': mac_address,
                             'hostname': hostname,
-                            'vendor': 'Unknown'
+                            'vendor': vendor
                         }
                         
                         active_hosts.append(host_info)
-                        print(f"\r{Fore.GREEN}[✓] Host {result:15} - {hostname:30}")
+                        print(f"\r{Fore.GREEN}[✓] {result:15} | {Fore.CYAN}{mac_address:17} | {Fore.WHITE}{hostname:20} | {Fore.MAGENTA}{vendor}")
                     
                     pbar.update(1)
         
+        print(f"\n{Fore.GREEN}[+] Ping sweep complete! Found {len(active_hosts)} host(s)\n")
         return active_hosts
     
     def resolve_hostname(self, ip):
@@ -458,46 +585,413 @@ class NetworkSecurityAnalyzer:
             socket.setdefaulttimeout(None)
             return "Unknown"
     
+    def get_device_name(self, ip):
+        """Get device name using multiple methods - Enhanced for better detection"""
+        
+        # Method 1: Standard DNS PTR lookup
+        try:
+            socket.setdefaulttimeout(2)  # Increased timeout
+            hostname = socket.gethostbyaddr(ip)[0]
+            socket.setdefaulttimeout(None)
+            if hostname and hostname != ip and not hostname.startswith(ip):
+                # Clean hostname
+                clean_name = hostname.split('.')[0]
+                if clean_name and len(clean_name) > 1:
+                    return clean_name
+        except:
+            pass
+        finally:
+            socket.setdefaulttimeout(None)
+        
+        # Method 2: NetBIOS name query (Windows devices) - IMPROVED
+        try:
+            # NetBIOS Name Query packet
+            transaction_id = b'\xAB\xCD'
+            flags = b'\x01\x10'  # Standard query
+            questions = b'\x00\x01'  # 1 question
+            answer_rrs = b'\x00\x00'
+            authority_rrs = b'\x00\x00'
+            additional_rrs = b'\x00\x00'
+            
+            # Query name: *<00><00><00><00><00><00><00><00><00><00><00><00><00><00><00>
+            query_name = b'\x20' + b'CKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' + b'\x00'
+            query_type = b'\x00\x21'  # NBSTAT
+            query_class = b'\x00\x01'  # IN
+            
+            netbios_query = transaction_id + flags + questions + answer_rrs + authority_rrs + additional_rrs + query_name + query_type + query_class
+            
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(1)
+            sock.sendto(netbios_query, (ip, 137))
+            
+            try:
+                data, addr = sock.recvfrom(4096)
+                if len(data) > 56:
+                    # Parse NetBIOS name from response
+                    # Names start at byte 56
+                    names_data = data[56:]
+                    
+                    # Each name entry is 18 bytes
+                    for i in range(0, min(len(names_data), 180), 18):
+                        name_bytes = names_data[i:i+15]
+                        name = name_bytes.decode('ascii', errors='ignore').strip()
+                        
+                        # Get name type (last byte before flags)
+                        if len(names_data) > i+15:
+                            name_type = names_data[i+15]
+                            
+                            # Type 0x00 = Workstation/Computer name
+                            # Type 0x20 = File Server service
+                            if name_type in [0x00, 0x20] and name and len(name) > 0:
+                                # Clean the name
+                                clean_name = name.replace('\x00', '').strip()
+                                if clean_name and len(clean_name) > 1:
+                                    sock.close()
+                                    return clean_name
+            except:
+                pass
+            sock.close()
+        except:
+            pass
+        
+        # Method 3: Try mDNS/Bonjour (Apple/IoT devices)
+        try:
+            mdns_query = b'\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\x00\x00'
+            # Query for _services._dns-sd._udp.local
+            mdns_query += b'\x09_services\x07_dns-sd\x04_udp\x05local\x00'
+            mdns_query += b'\x00\x0c\x00\x01'
+            
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(0.3)
+            sock.sendto(mdns_query, (ip, 5353))  # mDNS port
+            
+            try:
+                data, addr = sock.recvfrom(1024)
+                # Try to extract hostname from mDNS response
+                if b'.local' in data:
+                    parts = data.split(b'.local')
+                    if len(parts) > 0:
+                        name_part = parts[0].split(b'\x00')[-1]
+                        name = name_part.decode('ascii', errors='ignore').strip()
+                        if name and len(name) > 0:
+                            sock.close()
+                            return name
+            except:
+                pass
+            sock.close()
+        except:
+            pass
+        
+        # Method 4: Try SNMP (some network devices)
+        try:
+            # Simple SNMP GET request for sysName.0
+            snmp_query = b'\x30\x29\x02\x01\x00\x04\x06public\xa0\x1c\x02\x04'
+            snmp_query += b'\x00\x00\x00\x01\x02\x01\x00\x02\x01\x00\x30\x0e\x30\x0c'
+            snmp_query += b'\x06\x08\x2b\x06\x01\x02\x01\x01\x05\x00\x05\x00'
+            
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(0.3)
+            sock.sendto(snmp_query, (ip, 161))  # SNMP port
+            
+            try:
+                data, addr = sock.recvfrom(1024)
+                if len(data) > 40:
+                    # Basic SNMP response parsing
+                    try:
+                        name = data[40:].split(b'\x00')[0].decode('ascii', errors='ignore').strip()
+                        if name and len(name) > 0:
+                            sock.close()
+                            return name
+                    except:
+                        pass
+            except:
+                pass
+            sock.close()
+        except:
+            pass
+        
+        # Method 5: Try HTTP/HTTPS hostname header
+        try:
+            for port in [80, 443, 8080]:
+                try:
+                    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock.settimeout(0.3)
+                    result = sock.connect_ex((ip, port))
+                    
+                    if result == 0:
+                        # Send HTTP request
+                        request = b'GET / HTTP/1.0\r\nHost: ' + ip.encode() + b'\r\n\r\n'
+                        sock.send(request)
+                        response = sock.recv(512).decode('ascii', errors='ignore')
+                        
+                        # Look for Server header
+                        if 'Server:' in response:
+                            server_line = [l for l in response.split('\n') if 'Server:' in l]
+                            if server_line:
+                                server = server_line[0].split('Server:')[1].strip().split('/')[0]
+                                if server and len(server) > 0:
+                                    sock.close()
+                                    return server
+                    sock.close()
+                except:
+                    pass
+        except:
+            pass
+        
+        return "Unknown"
+    
+    def get_mac_from_arp_cache(self, ip):
+        """Get MAC address from system ARP cache"""
+        try:
+            if platform.system() == "Windows":
+                # Windows: arp -a
+                result = subprocess.run(
+                    ['arp', '-a', ip],
+                    capture_output=True,
+                    text=True,
+                    creationflags=subprocess.CREATE_NO_WINDOW,
+                    timeout=2
+                )
+                
+                if result.returncode == 0:
+                    # Parse Windows ARP output
+                    for line in result.stdout.split('\n'):
+                        if ip in line:
+                            # Extract MAC address (format: xx-xx-xx-xx-xx-xx)
+                            parts = line.split()
+                            for part in parts:
+                                if '-' in part and len(part) == 17:
+                                    return part.replace('-', ':')
+            else:
+                # Linux/Mac: arp -n
+                result = subprocess.run(
+                    ['arp', '-n', ip],
+                    capture_output=True,
+                    text=True,
+                    timeout=2
+                )
+                
+                if result.returncode == 0:
+                    # Parse Linux/Mac ARP output
+                    for line in result.stdout.split('\n'):
+                        if ip in line and ':' in line:
+                            # Extract MAC address
+                            parts = line.split()
+                            for part in parts:
+                                if ':' in part and len(part) >= 17:
+                                    return part
+        except:
+            pass
+        
+        return "Unknown"
+    
     def get_mac_vendor(self, mac_address):
         """Get vendor from MAC address using OUI lookup"""
         try:
-            # First 6 characters (OUI)
-            oui = mac_address.replace(':', '')[:6].upper()
+            if mac_address == "Unknown":
+                return "Unknown Vendor"
             
-            # Try to get from online database
+            # First 6 characters (OUI)
+            oui = mac_address.replace(':', '').replace('-', '')[:6].upper()
+            
+            # Try to get from online database first
             try:
-                response = requests.get(f"https://api.macvendors.com/{mac_address}", timeout=2)
+                response = requests.get(f"https://api.macvendors.com/{mac_address}", timeout=1)
                 if response.status_code == 200:
-                    return response.text
+                    return response.text.strip()
             except:
                 pass
             
-            # Local OUI database (sample)
+            # Expanded Local OUI database
             oui_db = {
-                '001C14': 'Cisco',
+                # Routers & Network
+                'D401C3': 'Routerboard.com',
+                '001C14': 'Cisco Systems',
                 '001B21': 'Netgear',
-                '0021B9': 'Intel',
-                '001D0F': 'Apple',
-                '0050F2': 'Microsoft',
-                '000C29': 'VMware',
-                '001E65': 'Belkin',
-                '001A2B': 'Samsung',
                 '00805F': 'Netgear',
-                '00017F': 'ASUS'
+                '001E65': 'Belkin International',
+                '00146C': 'Netgear',
+                '001E2A': 'Netgear',
+                
+                # PC & Laptops
+                '0021B9': 'Intel Corporate',
+                '001D0F': 'Apple Inc',
+                '0050F2': 'Microsoft',
+                '000C29': 'VMware Inc',
+                '00017F': 'ASUS',
+                '001A2B': 'Samsung Electronics',
+                '4CBB58': 'Chicony Electronics',
+                '1626FC': 'Unknown Manufacturer',
+                
+                # Apple Devices
+                '001124': 'Apple Inc',
+                '001451': 'Apple Inc',
+                '001CB3': 'Apple Inc',
+                '002332': 'Apple Inc',
+                '002436': 'Apple Inc',
+                '002500': 'Apple Inc',
+                '003065': 'Apple Inc',
+                '0050E4': 'Apple Inc',
+                '04489A': 'Apple Inc',
+                '0C4DE9': 'Apple Inc',
+                '10417F': 'Apple Inc',
+                '1C1AC0': 'Apple Inc',
+                '28E14C': 'Apple Inc',
+                '3C2EF9': 'Apple Inc',
+                '40A6D9': 'Apple Inc',
+                '48746E': 'Apple Inc',
+                '542696': 'Apple Inc',
+                '58B035': 'Apple Inc',
+                '5C5948': 'Apple Inc',
+                '609217': 'Apple Inc',
+                '64200C': 'Apple Inc',
+                '68AE20': 'Apple Inc',
+                '705681': 'Apple Inc',
+                '78A3E4': 'Apple Inc',
+                '7C6DF8': 'Apple Inc',
+                '9027E4': 'Apple Inc',
+                '98FE94': 'Apple Inc',
+                'A4B197': 'Apple Inc',
+                'B853AC': 'Apple Inc',
+                'BC52B7': 'Apple Inc',
+                'C8BCC8': 'Apple Inc',
+                'D0034B': 'Apple Inc',
+                'D8BB2C': 'Apple Inc',
+                'E0ACCB': 'Apple Inc',
+                'F0DCE2': 'Apple Inc',
+                'F82793': 'Apple Inc',
+                
+                # Samsung
+                '001A2B': 'Samsung Electronics',
+                '002566': 'Samsung Electronics',
+                '0026FC': 'Samsung Electronics',
+                '0C8112': 'Samsung Electronics',
+                '10BF48': 'Samsung Electronics',
+                '14EBB6': 'Samsung Electronics',
+                '1C232C': 'Samsung Electronics',
+                '283737': 'Samsung Electronics',
+                '34E0B6': 'Samsung Electronics',
+                '38AA3C': 'Samsung Electronics',
+                '3C2B85': 'Samsung Electronics',
+                '5C0A5B': 'Samsung Electronics',
+                '60F677': 'Samsung Electronics',
+                '78F7BE': 'Samsung Electronics',
+                '7C3A77': 'Samsung Electronics',
+                '84251B': 'Samsung Electronics',
+                'A0F6FD': 'Samsung Electronics',
+                'C44619': 'Samsung Electronics',
+                'D0667B': 'Samsung Electronics',
+                'E4B021': 'Samsung Electronics',
+                'F49F54': 'Samsung Electronics',
+                
+                # Xiaomi
+                '00EC0A': 'Xiaomi Communications',
+                '14F42A': 'Xiaomi Communications',
+                '28E31F': 'Xiaomi Communications',
+                '342387': 'Xiaomi Communications',
+                '64B473': 'Xiaomi Communications',
+                '789476': 'Xiaomi Communications',
+                '7CF05F': 'Xiaomi Communications',
+                '98FAE3': 'Xiaomi Communications',
+                'A42BB0': 'Xiaomi Communications',
+                'D481D7': 'Xiaomi Communications',
+                'F8A45F': 'Xiaomi Communications',
+                
+                # Huawei
+                '0025F5': 'Huawei Technologies',
+                '002F5D': 'Huawei Technologies',
+                '10C37B': 'Huawei Technologies',
+                '1C1D67': 'Huawei Technologies',
+                '4C49E3': 'Huawei Technologies',
+                '74E5F9': 'Huawei Technologies',
+                '9C28EF': 'Huawei Technologies',
+                'AC853D': 'Huawei Technologies',
+                'BC7670': 'Huawei Technologies',
+                'D0C5F3': 'Huawei Technologies',
+                
+                # TP-Link
+                '001DD9': 'TP-Link Technologies',
+                '0027F7': 'TP-Link Technologies',
+                '50C7BF': 'TP-Link Technologies',
+                '742B62': 'TP-Link Technologies',
+                'A462CD': 'TP-Link Technologies',
+                'C04A00': 'TP-Link Technologies',
+                
+                # Others
+                '000000': 'Xerox Corporation',
+                '00D0D3': 'Lantronix',
+                '081196': 'Hon Hai Precision',
+                '18B430': 'Nest Labs Inc',
             }
             
             # Check exact match
             if oui in oui_db:
                 return oui_db[oui]
             
-            # Check prefix match
+            # Check prefix match (first 4 characters)
             for prefix, vendor in oui_db.items():
                 if oui.startswith(prefix[:4]):
                     return vendor
             
-            return "Unknown"
+            return "Unknown Vendor"
         except:
-            return "Unknown"
+            return "Unknown Vendor"
+    
+    def display_discovery_results(self):
+        """Display network discovery results in a beautiful table - Like Bettercap"""
+        if not self.active_hosts:
+            print(f"\n{Fore.YELLOW}[!] No active hosts found")
+            return
+        
+        print(f"\n{Fore.CYAN}╔{'═'*110}╗")
+        print(f"{Fore.CYAN}║{' '*110}║")
+        print(f"{Fore.CYAN}║{Fore.GREEN}                            🌐 NETWORK DISCOVERY RESULTS{' '*52}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║{Fore.YELLOW}                                  Like Bettercap{' '*57}{Fore.CYAN}║")
+        print(f"{Fore.CYAN}║{' '*110}║")
+        print(f"{Fore.CYAN}╠{'═'*110}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Network Range : {Fore.GREEN}{self.network_range:<90}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Total Hosts   : {Fore.GREEN}{len(self.active_hosts):<90}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Scan Time     : {Fore.GREEN}{datetime.now().strftime('%Y-%m-%d %H:%M:%S'):<90}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*110}╝\n")
+        
+        # Create table data
+        table_data = []
+        for i, host in enumerate(self.active_hosts, 1):
+            # Color coding for hostname
+            hostname_display = host['hostname'] if host['hostname'] != "Unknown" else f"{Fore.YELLOW}Unknown{Fore.WHITE}"
+            vendor_display = host['vendor'] if host['vendor'] != "Unknown Vendor" else f"{Fore.YELLOW}Unknown Vendor{Fore.WHITE}"
+            
+            table_data.append([
+                f"{Fore.WHITE}{i}",
+                f"{Fore.GREEN}{host['ip']}",
+                f"{Fore.CYAN}{host['mac']}",
+                hostname_display,
+                vendor_display
+            ])
+        
+        # Print table
+        print(tabulate(
+            table_data,
+            headers=[
+                f"{Fore.WHITE}#",
+                f"{Fore.WHITE}IP Address",
+                f"{Fore.WHITE}MAC Address",
+                f"{Fore.WHITE}Hostname",
+                f"{Fore.WHITE}Vendor/Manufacturer"
+            ],
+            tablefmt="fancy_grid"
+        ))
+        
+        # Statistics
+        known_hostnames = sum(1 for h in self.active_hosts if h['hostname'] != "Unknown")
+        known_vendors = sum(1 for h in self.active_hosts if h['vendor'] != "Unknown Vendor")
+        
+        print(f"\n{Fore.CYAN}╔{'═'*75}╗")
+        print(f"{Fore.CYAN}║ {Fore.YELLOW}📊 STATISTICS{' '*61}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╠{'═'*75}╣")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Hosts with known hostname : {Fore.GREEN}{known_hostnames}/{len(self.active_hosts)}{' '*(43-len(str(known_hostnames))-len(str(len(self.active_hosts))))}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}║  {Fore.WHITE}Hosts with known vendor   : {Fore.GREEN}{known_vendors}/{len(self.active_hosts)}{' '*(43-len(str(known_vendors))-len(str(len(self.active_hosts))))}{Fore.CYAN} ║")
+        print(f"{Fore.CYAN}╚{'═'*75}╝\n")
     
     def network_sniffer(self, interface=None, count=100, filter="ip"):
         """Packet sniffer for network analysis"""
@@ -981,6 +1475,8 @@ class NetworkSecurityAnalyzer:
         
         if self.active_hosts:
             print(f"\n{Fore.GREEN}[+] Discovery complete! Found {len(self.active_hosts)} active host(s)")
+            # Display results in a beautiful table
+            self.display_discovery_results()
         else:
             print(f"\n{Fore.YELLOW}[*] No active hosts found in network {self.network_range}")
     
